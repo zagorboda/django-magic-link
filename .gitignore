@@ -1,4 +1,4 @@
-staticfiles/
+#staticfiles/
 .idea/
 
 core/.env

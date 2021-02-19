@@ -9,7 +9,12 @@
     <h1>Home page</h1>
     <p>This page is visible for all users</p>
 
+    {% if request.user.is_authenticated %}
+        You logged in as {{request.user.username}}
+    {% endif %}
+
     <p><a href="{% url 'magic_link:login' %}">Manual login</a></p>
+    <p><a href="{% url 'magic_link:logout' %}">Logout</a></p>
     <p><a href="{% url 'magic_link:signup' %}">Manual signup</a></p>
     <p><a href="{% url 'magic_link:create_magic_link' %}">Get login link</a></p>
     <p><a href="{% url 'magic_link:protected_url' %}">Some protected url</a></p>

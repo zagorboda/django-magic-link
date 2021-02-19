@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -13,6 +14,24 @@ from .models import MagicLinkHash
 
 import datetime
 import hashlib
+import requests
+
+
+def send_email(email, link):
+    html = """<html>
+      <body>
+        <p><a href="{}">Link</a> to login into website. Mark this message as not spam (otherwise link will not show)</p>
+      </body>
+    </html>
+    """.format(link)
+    return requests.post(
+        settings.MAIL_GUN_API_LINK,
+        auth=("api", settings.MAIL_GUN_API_TOKEN),
+        data={"from": 'young-headland-52474@herokuapp.com',
+              "to": [email],
+              "subject": "Hello",
+              "text": "_Link_ {} to login into website. Mark this message as not spam (otherwise link will not show)".format(link),
+              "html": html}).json()
 
 
 def signup_view(request):
@@ -70,7 +89,7 @@ def create_magic_link_view(request):
             new_magic_link_obj.created_at = datetime.datetime.now()
             new_magic_link_obj.save()
 
-            # Send email with token link
+            send_email(email, link)
 
         messages.success(request, 'Message was sent to your email')
         return redirect('magic_link:create_magic_link')
@@ -90,9 +109,6 @@ def handle_magic_link_view(request):
             magic_link_object = MagicLinkHash.objects.get(token_hash=token_hash)
             user_id = magic_link_object.user_id
 
-            magic_link_object.hits += 1
-            magic_link_object.save()
-
             try:
                 user = User.objects.get(id=user_id)
             except ObjectDoesNotExist:
@@ -100,6 +116,9 @@ def handle_magic_link_view(request):
 
             if user is not None:
                 if user.is_active:
+                    magic_link_object.hits += 1
+                    magic_link_object.save()
+
                     login(request, user)
                     return redirect('magic_link:home')
     raise Http404
