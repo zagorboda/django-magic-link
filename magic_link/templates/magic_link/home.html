@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+    <h1>Home page</h1>
+    <p>This page is visible for all users</p>
+
+    <p><a href="{% url 'magic_link:login' %}">Manual login</a></p>
+    <p><a href="{% url 'magic_link:signup' %}">Manual signup</a></p>
+    <p><a href="{% url 'magic_link:create_magic_link' %}">Get login link</a></p>
+    <p><a href="{% url 'magic_link:protected_url' %}">Some protected url</a></p>
+
+</body>
+</html>
