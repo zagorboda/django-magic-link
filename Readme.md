@@ -59,7 +59,9 @@ GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
 
   ## Using
 
-  ![image-20210222022818493](/home/bod/.config/Typora/typora-user-images/image-20210222022818493.png)
+  ![home-page](./doc/home_page.png)
+
+
 
   ### Home page
 
@@ -91,7 +93,7 @@ GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
 
 ### Django admin
 
-![image-20210222105728547](/home/bod/.config/Typora/typora-user-images/image-20210222105728547.png)
+![django-admin](./doc/img/django_admin1.png)
 
 
 
