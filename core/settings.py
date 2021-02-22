@@ -8,7 +8,7 @@ environ.Env.read_env()
 
 SECRET_KEY = env("SECRET_KEY")
 
-DEBUG = False
+DEBUG = True
 
 TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
 
