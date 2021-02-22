@@ -1,5 +1,9 @@
 This project is my realisation of magic links with Django.
 
+Project deployed to Heroku: https://young-headland-52474.herokuapp.com/
+
+To send emails I use Mailgun API
+
 ## Setup
 
 `git clone git@github.com:zagorboda/django-magic-link.git`
@@ -59,7 +63,7 @@ GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
 
   ## Using
 
-  ![home-page](./doc/home_page.png)
+  ![home-page](./doc/img/home_page.png)
 
 
 
@@ -99,7 +103,7 @@ GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
 
 Django admin will include one additional table, MagicLinkHash.
 
-![image-20210222110126474](/home/bod/.config/Typora/typora-user-images/image-20210222110126474.png) 	
+![django-admin](./doc/img/django_admin2.png)	
 
 Table hold user email and id, hashed token, datetime when token were created and number of times this link was used.
 
