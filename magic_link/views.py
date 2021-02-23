@@ -18,6 +18,7 @@ import requests
 
 
 def send_email(email, link):
+    """ Send email to user """
     html = """<html>
       <body>
         <p><a href="{}">Link</a> to login into website. Mark this message as not spam (otherwise link will not show)</p>
@@ -35,6 +36,7 @@ def send_email(email, link):
 
 
 def signup_view(request):
+    """ User signup """
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -46,6 +48,7 @@ def signup_view(request):
 
 
 def login_view(request):
+    """ User login """
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
         username = request.POST['username']
@@ -65,29 +68,31 @@ def login_view(request):
 
 
 def home_view(request):
+    """ Render main page """
     return render(request, 'magic_link/home.html')
 
 
 def create_magic_link_view(request):
+    """ Generate magic link for specific user """
     if request.method == 'POST':
         email = request.POST['email']
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():  # Check if user with that email exists
             user = User.objects.get(email=email)
 
-            token = get_random_string(50)
+            token = get_random_string(50)  # create random string
             hash_object = hashlib.sha256(token.encode())
-            token_hash = hash_object.hexdigest()
+            token_hash = hash_object.hexdigest()  # create hash from random string
 
             link = request.build_absolute_uri(reverse('magic_link:handle_magic_link'))
-            link += '?token=' + token
+            link += '?token=' + token  # create absolute url with token
 
             new_magic_link_obj = MagicLinkHash()
             new_magic_link_obj.user_id = user.id
             new_magic_link_obj.user_email = email
             new_magic_link_obj.token_hash = token_hash
             new_magic_link_obj.created_at = datetime.datetime.now()
-            new_magic_link_obj.save()
+            new_magic_link_obj.save()  # save information about magic link
 
             send_email(email, link)
 
@@ -99,18 +104,19 @@ def create_magic_link_view(request):
 
 
 def handle_magic_link_view(request):
+    """ Authenticate user with magic link """
     token = request.GET.get('token')
 
-    if token:
+    if token:  # check if token parameter is exists
         hash_object = hashlib.sha256(token.encode())
-        token_hash = hash_object.hexdigest()
+        token_hash = hash_object.hexdigest()  # create hash from token
 
-        if MagicLinkHash.objects.filter(token_hash=token_hash).exists():
+        if MagicLinkHash.objects.filter(token_hash=token_hash).exists():  # check hash existence
             magic_link_object = MagicLinkHash.objects.get(token_hash=token_hash)
             user_id = magic_link_object.user_id
 
             try:
-                user = User.objects.get(id=user_id)
+                user = User.objects.get(id=user_id)  # get user that requested token
             except ObjectDoesNotExist:
                 user = None
 
@@ -125,11 +131,13 @@ def handle_magic_link_view(request):
 
 
 def logout_view(request):
+    """ Logout view """
     logout(request)
     return redirect('magic_link:home')
 
 
 def protected_url_view(request):
+    """ Simple view for logged users """
     if request.user.is_authenticated:
         return render(request, 'magic_link/protected.html')
     return redirect('magic_link:home')
